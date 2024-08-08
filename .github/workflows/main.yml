@@ -1,5 +1,7 @@
 name: Generate Podcast Feeds
+
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -7,5 +9,20 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4.1.7
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: podcast-generator:latest
+          platforms: linux/amd64
+
       - name: Run Feed Generator
-        uses: gtandes/podcast-generator@main
+        uses: docker://podcast-generator:latest
+        with:
+          email: gtandes@localhost
+          name: gtandes
