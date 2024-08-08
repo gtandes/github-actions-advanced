@@ -21,6 +21,9 @@ jobs:
           tags: podcast-generator:latest
 
       - name: Run Feed Generator
-        uses: docker://podcast-generator:latest
-        with:
-          args: ${{ github.actor }} ${{ github.actor }}@users.noreply.github.com
+        run: |
+          docker run --rm \
+            -e INPUT_EMAIL="${{ github.actor }}@users.noreply.github.com" \
+            -e INPUT_NAME="${{ github.actor }}" \
+            -v ${{ github.workspace }}:/github/workspace \
+            podcast-generator:latest
